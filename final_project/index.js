@@ -12,7 +12,7 @@ app.use("/customer", session({ secret: "fingerprint_customer", resave: true, sav
 
 app.use("/customer/auth/*", function auth(req, res, next) {
     // Get the JWT token from the request header or query parameter
-    const token = req.headers.authorization; // Assuming token is passed in the Authorization header
+    const token = req.headers.authorization; 
 
     // Check if token is provided
     if (!token) {
@@ -26,7 +26,7 @@ app.use("/customer/auth/*", function auth(req, res, next) {
         // Token is valid, proceed to the next middleware or route handler
         next();
     } catch (error) {
-        // Token is invalid or expired
+        // Token is not valid
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 });
