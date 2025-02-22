@@ -92,4 +92,73 @@ public_users.get('/review/:isbn', function (req, res) {
     }
 });
 
+// Async requests
+public_users.get("/books", function (req, res) {
+    let promise = new Promise(function (resolve, reject) {
+        resolve(res.send(JSON.stringify(books, null, 4)));
+    });
+
+    promise.then(() => console.log("Book list has been sent successfully"));
+});
+
+public_users.get('/isbn/:isbn', function (req, res) {
+    let isbn = req.params.isbn;
+    let book = books[isbn];
+    let promise = new Promise(function (resolve, reject) {
+        if (book) {
+            resolve(res.send(JSON.stringify(book, null, 5)));
+        }
+        else {
+            resolve(res.send("Sorry, We couldn't find a book with this ISBN"));
+        }
+    });
+
+    promise.then(() => console.log("The details of the book with the requested ISBN has been sent successfully "));
+
+});
+
+public_users.get('/author/:author', function (req, res) {
+    let promise = new Promise(function (resolve, reject) {
+        let author = req.params.author;
+        let result = {
+            "booksByAuthor": []
+        }
+
+        let keys = Object.keys(books);
+
+        for (let key of keys) {
+            let book = books[key];
+            if (book.author == author) {
+                result['booksByAuthor'].push(book)
+            }
+        }
+
+        resolve(res.send(JSON.stringify(result, null, 5)))
+    });
+
+    promise.then(() => console.log("The list of books with the requested Author has been sent successfully"))
+});
+
+public_users.get('/title/:title', function (req, res) {
+    let promise = new Promise(function (resolve, reject) {
+        let title = req.params.title;
+
+        let result = {
+            "booksByTitle": []
+        }
+
+        let keys = Object.keys(books);
+
+        for (let key of keys) {
+            let book = books[key]
+            if (book.title == title) {
+                result['booksByTitle'].push(book)
+            }
+        }
+
+        resolve(res.send(JSON.stringify(result, null, 5)));
+    });
+
+    promise.then(() => console.log("Books with the requested title has been sent successfully."))
+});
 module.exports.general = public_users;
